@@ -18,7 +18,7 @@ setup(
     packages=find_packages(),
     install_requires=['requests>=0.13.3',],
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
