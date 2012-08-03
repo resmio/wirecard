@@ -2,7 +2,7 @@ from collections import OrderedDict
 from nose.tools import assert_raises
 from mock import patch
 import requests
-from qmore import QMore, QMoreError
+from wirecard import QMore, QMoreError
 
 def test_qmore_init_datastorage():
     client = QMore('D200001', 'qmore', 'B8AKTPWBRMNBV455FG6M2DANE99WU2')
