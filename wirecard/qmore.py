@@ -102,7 +102,7 @@ class QMore:
             ('password', self.password),
             ('secret', self.secret),
             ('language', language),
-            ('requestFingerprint', None),
+            ('requestFingerprint', ''),
             ('orderNumber', orderNumber or ''),
             ('sourceOrderNumber', sourceOrderNumber),
             ('autoDeposit', autoDeposit),
