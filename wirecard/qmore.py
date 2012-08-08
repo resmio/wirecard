@@ -96,7 +96,7 @@ class QMore:
         """
         url = 'https://secure.wirecard-cee.com/qmore/backend/recurPayment'
 
-        data = OrderedDict(
+        data = OrderedDict((
             ('customerId', self.customerId),
             ('shopId', self.shopId),
             ('password', self.password),
@@ -109,7 +109,7 @@ class QMore:
             ('orderDescription', orderDescription),
             ('amount', amount),
             ('currency', currency),
-        )
+        ))
 
         data['requestFingerprint'] = self.make_request_fingerprint(data.values())
         del data['secret']
