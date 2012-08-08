@@ -12,11 +12,12 @@ class QMore:
     http://www.wirecard.at/en/products/qmore/
 
     """
-    def __init__(self, customerId, shopId, secret, language='en'):
+    def __init__(self, customerId, shopId, secret, password=None, language='en'):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
         self.language = language
+        self.password = password
 
     def init_datastorage(self, orderIdent):
         """
@@ -87,6 +88,42 @@ class QMore:
 
         result['redirectUrl'] = unquote(result['redirectUrl'])
         return result['redirectUrl']
+
+    def recurring_payment(self, sourceOrderNumber, amount, orderDescription, language='en', orderNumber=None, autoDeposit='NO', currency='EUR'):
+        """
+        Recurring payment
+
+        """
+        url = 'https://secure.wirecard-cee.com/qmore/backend/recurPayment'
+
+        data = OrderedDict(
+            ('customerId', self.customerId),
+            ('shopId', self.shopId),
+            ('password', self.password),
+            ('secret', self.secret),
+            ('language', language),
+            ('requestFingerprint', None),
+            ('orderNumber', orderNumber or ''),
+            ('sourceOrderNumber', sourceOrderNumber),
+            ('autoDeposit', autoDeposit),
+            ('orderDescription', orderDescription),
+            ('amount', amount),
+            ('currency', currency),
+        )
+
+        data['requestFingerprint'] = self.make_request_fingerprint(data.values())
+        del data['secret']
+        response = requests.post(url, data)
+        result = dict([s.split('=') for s in response.text.split('&')])
+
+        error_count = int(result.get('errors', '0'))
+        if error_count:
+            errors = [(
+                result['error.%d.errorCode' % i], result['error.%d.message' % i], result['error.%d.consumerMessage' % i]
+                ) for i in range(error_count, error_count + 1)]
+            raise QMoreError(errors)
+
+        return result
 
     def make_request_fingerprint(self, data):
     	return hashlib.sha512(''.join(data)).hexdigest()

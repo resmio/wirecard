@@ -60,3 +60,11 @@ def test_qmore_init_frontend():
                 'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1')
     mock_method.assert_called_once_with(request_url, request_data)
     assert result == expected_result
+
+def test_qmore_recur_payment():
+    """
+    Test recurring payments
+
+    """
+    client = QMore('D200001', 'qmore', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', password='jcv45z')
+
