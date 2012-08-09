@@ -107,7 +107,7 @@ class QMore:
             ('sourceOrderNumber', sourceOrderNumber),
             ('autoDeposit', autoDeposit),
             ('orderDescription', orderDescription),
-            ('amount', amount),
+            ('amount', "{0:.2f}".format(amount)),
             ('currency', currency),
         ))
 
