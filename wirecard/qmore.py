@@ -41,7 +41,7 @@ class QMore:
 
     def init_frontend(self, amount, currency, paymentType, language,
         orderDescription, successUrl, cancelUrl, failureUrl, serviceUrl, confirmUrl,
-            consumerUserAgent, consumerIpAddress, financialInstitution=None, noscriptInfoUrl=None,
+            consumerUserAgent, consumerIpAddress, autoDeposit='NO', financialInstitution=None, noscriptInfoUrl=None,
                 windowName=None, duplicateRequestCheck=False, storageId=None, orderIdent=None, **kwargs):
         """
         Init frontend
@@ -65,6 +65,7 @@ class QMore:
             ('requestFingerprintOrder', None),
             ('consumerUserAgent', consumerUserAgent),
             ('consumerIpAddress', consumerIpAddress),
+            ('autoDeposit', autoDeposit),
         ))
         data.update(**kwargs)
 
