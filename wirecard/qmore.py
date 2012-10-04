@@ -32,6 +32,10 @@ class QMore:
     	    ('returnUrl', 'http://www.example.com/return'),
     	    ('language', self.language),
     	))
+
+        # remove unused optional values (None values)
+        data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
+
         data.update([('requestFingerprint', self.make_request_fingerprint(data.values() + [self.secret]))])
         response = requests.post(url, data)
 
