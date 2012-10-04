@@ -62,7 +62,7 @@ class QMore:
             ('failureUrl', failureUrl),
             ('serviceUrl', serviceUrl),
             ('confirmUrl', confirmUrl),
-            ('requestFingerprintOrder', None),
+            ('requestFingerprintOrder', ''),
             ('consumerUserAgent', consumerUserAgent),
             ('consumerIpAddress', consumerIpAddress),
             ('autoDeposit', autoDeposit),
@@ -74,6 +74,9 @@ class QMore:
 
         if orderIdent is not None:
             data['orderIdent'] = orderIdent
+
+        # remove unused optional values (None values)
+        data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
         data['requestFingerprintOrder'] = ','.join(data.keys() + ['secret'])
         data.update([('requestFingerprint', self.make_request_fingerprint(data.values() + [self.secret]))])
