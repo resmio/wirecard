@@ -40,6 +40,14 @@ class QMore:
         response = requests.post(url, data)
 
         result = dict([s.split('=') for s in response.text.split('&')])
+
+        error_count = int(result.get('errors', '0'))
+        if error_count:
+            errors = [(
+                result['error.%d.errorCode' % i], result['error.%d.message' % i], result['error.%d.consumerMessage' % i]
+                ) for i in range(error_count, error_count + 1)]
+            raise QMoreError(errors)
+
         result['javascriptUrl'] = unquote(result['javascriptUrl'])
         return result
 
