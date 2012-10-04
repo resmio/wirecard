@@ -5,7 +5,7 @@ import requests
 from wirecard.qmore import QMore, QMoreError
 
 def test_qmore_init_datastorage():
-    client = QMore('D200001', 'qmore', 'B8AKTPWBRMNBV455FG6M2DANE99WU2')
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore')
     order_ident = '12345'
 
     # build the mock response object
@@ -33,7 +33,7 @@ def test_qmore_init_datastorage():
     assert data_storage_result == expected_result
 
 def test_qmore_init_frontend():
-    client = QMore('D200001', 'qmore', 'B8AKTPWBRMNBV455FG6M2DANE99WU2')
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore',)
 
     # make sure we raise QMoreError when an error occurs
     mock_init_frontend_result = 'error.1.message=PAYMENTTYPE+is+invalid.&error.1.consumerMessage=PAYMENTTYPE+ist+ung%26%23252%3Bltig.&error.1.errorCode=18051&errors=1'
@@ -84,5 +84,31 @@ def test_qmore_recur_payment():
     Test recurring payments
 
     """
-    client = QMore('D200001', 'qmore', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', password='jcv45z')
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore', password='jcv45z')
+
+    mock_init_frontend_result = 'orderNumber=1234'
+    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result))
+
+    request_url = 'https://secure.wirecard-cee.com/qmore/backend/recurPayment'
+
+    request_data = OrderedDict([
+        ('customerId', 'D200001'),
+        ('shopId', 'qmore'),
+        ('password', 'jcv45z'),
+        ('language', 'de'),
+        ('requestFingerprint', '3cef9bcd3d6b7be970b1b8bdfb883655f99fd61f9d7a5d164023c32e16c3480229621647c6d49003190ff10460dd162bdec77c30a5887a4d46ad36189f924e07'),
+        ('orderNumber', '1234'),
+        ('sourceOrderNumber', '123456'),
+        ('amount', '100.00'),
+        ('currency', 'EUR'),
+        ('autoDeposit', 'NO'),
+        ('orderDescription', 'my orderdescription'),
+    ])
+
+    expected_result = {'orderNumber': '1234'}
+
+    with patch.object(requests, 'post', return_value=mock_response) as mock_method:
+        result = client.recurring_payment('123456', '100.00', 'my orderdescription', 'de', '1234', autoDeposit='NO')
+    mock_method.assert_called_once_with(request_url, request_data)
+    assert result == expected_result
 

@@ -12,7 +12,7 @@ class QMore:
     http://www.wirecard.at/en/products/qmore/
 
     """
-    def __init__(self, customerId, shopId, secret, password=None, language='en'):
+    def __init__(self, customerId, secret, password=None, shopId=None, language='en'):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
@@ -90,7 +90,7 @@ class QMore:
         result['redirectUrl'] = unquote(result['redirectUrl'])
         return result['redirectUrl']
 
-    def recurring_payment(self, sourceOrderNumber, amount, orderDescription, language='en', orderNumber=None, autoDeposit='NO', currency='EUR'):
+    def recurring_payment(self, sourceOrderNumber, amount, orderDescription, language='en', orderNumber=None, autoDeposit=None, currency='EUR'):
         """
         Recurring payment
 
@@ -104,13 +104,16 @@ class QMore:
             ('secret', self.secret),
             ('language', language),
             ('requestFingerprint', ''),
-            ('orderNumber', orderNumber or ''),
+            ('orderNumber', orderNumber),
             ('sourceOrderNumber', sourceOrderNumber),
-            ('autoDeposit', autoDeposit),
-            ('orderDescription', orderDescription),
             ('amount', amount),
             ('currency', currency),
+            ('autoDeposit', autoDeposit),
+            ('orderDescription', orderDescription),
         ))
+
+        # remove unused optional values (None values)
+        data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
         data['requestFingerprint'] = self.make_request_fingerprint(data.values())
         del data['secret']
