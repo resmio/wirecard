@@ -120,10 +120,10 @@ class QMore:
             ('language', language),
             ('orderNumber', orderNumber),
             ('sourceOrderNumber', sourceOrderNumber),
-            ('amount', amount),
-            ('currency', currency),
             ('autoDeposit', autoDeposit),
             ('orderDescription', orderDescription),
+            ('amount', amount),
+            ('currency', currency),
         ))
 
         # remove unused optional values (None values)
