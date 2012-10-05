@@ -122,12 +122,12 @@ class QMore:
             ('sourceOrderNumber', sourceOrderNumber),
             ('amount', amount),
             ('currency', currency),
-            # ('autoDeposit', autoDeposit),
+            ('autoDeposit', autoDeposit),
             ('orderDescription', orderDescription),
         ))
 
         # remove unused optional values (None values)
-        data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
+        # data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
         data['requestFingerprint'] = self.make_request_fingerprint(data.values())
         del data['secret']
