@@ -117,7 +117,6 @@ class QMore:
             ('shopId', self.shopId),
             ('password', self.password),
             ('secret', self.secret),
-            ('command', 'deposit'),
             ('language', language),
             ('orderNumber', orderNumber),
             ('sourceOrderNumber', sourceOrderNumber),
