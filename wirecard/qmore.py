@@ -122,7 +122,7 @@ class QMore:
             ('sourceOrderNumber', sourceOrderNumber),
             ('amount', amount),
             ('currency', currency),
-            ('autoDeposit', autoDeposit),
+            # ('autoDeposit', autoDeposit),
             ('orderDescription', orderDescription),
         ))
 
