@@ -127,7 +127,7 @@ class QMore:
         ))
 
         # remove unused optional values (None values)
-        # data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
+        data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
         data['requestFingerprint'] = self.make_request_fingerprint(data.values())
         del data['secret']
