@@ -111,6 +111,7 @@ class QMore:
 
         """
         url = 'https://secure.wirecard-cee.com/qmore/backend/recurPayment'
+        url = 'http://requestb.in/10d3bmx1'
 
         data = OrderedDict((
             ('customerId', self.customerId),
