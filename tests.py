@@ -96,19 +96,17 @@ def test_qmore_recur_payment():
         ('shopId', 'qmore'),
         ('password', 'jcv45z'),
         ('language', 'de'),
-        ('requestFingerprint', '3cef9bcd3d6b7be970b1b8bdfb883655f99fd61f9d7a5d164023c32e16c3480229621647c6d49003190ff10460dd162bdec77c30a5887a4d46ad36189f924e07'),
         ('orderNumber', '1234'),
         ('sourceOrderNumber', '123456'),
         ('amount', '100.00'),
         ('currency', 'EUR'),
         ('autoDeposit', 'NO'),
         ('orderDescription', 'my orderdescription'),
+        ('requestFingerprint', '3cef9bcd3d6b7be970b1b8bdfb883655f99fd61f9d7a5d164023c32e16c3480229621647c6d49003190ff10460dd162bdec77c30a5887a4d46ad36189f924e07'),
     ])
-
-    expected_result = {'orderNumber': '1234'}
 
     with patch.object(requests, 'post', return_value=mock_response) as mock_method:
         result = client.recurring_payment('123456', '100.00', 'my orderdescription', 'de', '1234', autoDeposit='NO')
     mock_method.assert_called_once_with(request_url, request_data)
-    assert result == expected_result
+    assert result == {'orderNumber': '1234'}
 

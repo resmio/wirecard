@@ -118,7 +118,6 @@ class QMore:
             ('password', self.password),
             ('secret', self.secret),
             ('language', language),
-            ('requestFingerprint', ''),
             ('orderNumber', orderNumber),
             ('sourceOrderNumber', sourceOrderNumber),
             ('amount', amount),
