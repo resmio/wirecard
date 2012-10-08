@@ -98,11 +98,11 @@ def test_qmore_recur_payment():
         ('language', 'de'),
         ('orderNumber', '1234'),
         ('sourceOrderNumber', '123456'),
-        ('amount', '100.00'),
-        ('currency', 'EUR'),
         ('autoDeposit', 'NO'),
         ('orderDescription', 'my orderdescription'),
-        ('requestFingerprint', '3cef9bcd3d6b7be970b1b8bdfb883655f99fd61f9d7a5d164023c32e16c3480229621647c6d49003190ff10460dd162bdec77c30a5887a4d46ad36189f924e07'),
+        ('amount', '100.00'),
+        ('currency', 'EUR'),
+        ('requestFingerprint', 'd89ee82de84ec0fc02364b3f52cbd8cb5aa4854a2a899721e8caf6212685d9689b737a1a110cac6cc6c9d09081c57b736bad18994764b966e53703dd1a3753bc'),
     ])
 
     with patch.object(requests, 'post', return_value=mock_response) as mock_method:

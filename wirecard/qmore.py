@@ -19,7 +19,7 @@ class QMore:
         self.language = language
         self.password = password
 
-    def init_datastorage(self, orderIdent):
+    def init_datastorage(self, orderIdent, returnUrl='http://www.example.com/return'):
         """
         Init data datastorage
 
@@ -29,7 +29,7 @@ class QMore:
     	    ('customerId', self.customerId),
             ('shopId', self.shopId),
     	    ('orderIdent', orderIdent),
-    	    ('returnUrl', 'http://www.example.com/return'),
+    	    ('returnUrl', returnUrl),
     	    ('language', self.language),
     	))
 
