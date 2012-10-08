@@ -146,8 +146,7 @@ class QMore:
     def make_request_fingerprint(self, data):
     	return hashlib.sha512(''.join(data)).hexdigest()
 
-    def verify_response(self, post):
-        data = post.copy()
+    def verify_response(self, data):
         data['secret'] = self.secret
         fingerprint = self.make_request_fingerprint((data[i] for i in data['responseFingerprintOrder'].split(',')))
         return data['responseFingerprint'] == fingerprint
