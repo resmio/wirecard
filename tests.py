@@ -63,11 +63,10 @@ def test_qmore_init_frontend():
         ('failureUrl', 'http://www.example.com/failure'),
         ('serviceUrl', 'http://www.example.com/service'),
         ('confirmUrl', 'http://www.example.com/confirm'),
-        ('requestFingerprintOrder', 'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,autoDeposit,secret'),
+        ('requestFingerprintOrder', 'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,secret'),
         ('consumerUserAgent', 'chrome'),
         ('consumerIpAddress', '127.0.0.1'),
-        ('autoDeposit', 'NO'),
-        ('requestFingerprint', 'a7200c1a882e43c5d48a1db53ed3205d5fd43d632c7dba7cfb1e8913a92a3f855962d50f94b238112cae6ba55da7669e67b46af271244491bdc864e8946a8587')
+        ('requestFingerprint', 'e46e6983ed4ea1732e8362abc6b6a31bf1c16342248eec64ef675fb5ede0874f8389177dd5b59c9b7efa6b4a0dcc6d6a6ff24c5fa1f97f71bbc2da1a866d96d6')
     ])
 
     expected_result = 'https://secure.wirecard-cee.com/qmore/frontend/D200001qmore/select.php?SID=8u8ev2jrc8cs0n94cppphv2036'

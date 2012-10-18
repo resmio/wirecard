@@ -53,8 +53,8 @@ class QMore:
 
     def init_frontend(self, amount, currency, paymentType, language,
         orderDescription, successUrl, cancelUrl, failureUrl, serviceUrl, confirmUrl,
-            consumerUserAgent, consumerIpAddress, autoDeposit='NO', financialInstitution=None, noscriptInfoUrl=None,
-                windowName=None, duplicateRequestCheck=False, storageId=None, orderIdent=None, **kwargs):
+            consumerUserAgent, consumerIpAddress, autoDeposit=None, financialInstitution=None, noscriptInfoUrl=None,
+                windowName=None, duplicateRequestCheck=None, storageId=None, orderIdent=None, **kwargs):
         """
         Init frontend
 
@@ -78,14 +78,12 @@ class QMore:
             ('consumerUserAgent', consumerUserAgent),
             ('consumerIpAddress', consumerIpAddress),
             ('autoDeposit', autoDeposit),
+            ('storageId', storageId),
+            ('orderIdent', orderIdent),
+            ('duplicateRequestCheck', duplicateRequestCheck),
+            ('windowName', windowName),
+            ('noscriptInfoUrl', noscriptInfoUrl),
         ))
-        data.update(**kwargs)
-
-        if storageId is not None:
-            data['storageId'] = storageId
-
-        if orderIdent is not None:
-            data['orderIdent'] = orderIdent
 
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
