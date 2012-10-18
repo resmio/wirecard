@@ -84,6 +84,7 @@ class QMore:
             ('windowName', windowName),
             ('noscriptInfoUrl', noscriptInfoUrl),
         ))
+        data.update(**kwargs)
 
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])

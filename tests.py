@@ -63,10 +63,11 @@ def test_qmore_init_frontend():
         ('failureUrl', 'http://www.example.com/failure'),
         ('serviceUrl', 'http://www.example.com/service'),
         ('confirmUrl', 'http://www.example.com/confirm'),
-        ('requestFingerprintOrder', 'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,secret'),
+        ('requestFingerprintOrder', 'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,myextradata,secret'),
         ('consumerUserAgent', 'chrome'),
         ('consumerIpAddress', '127.0.0.1'),
-        ('requestFingerprint', 'e46e6983ed4ea1732e8362abc6b6a31bf1c16342248eec64ef675fb5ede0874f8389177dd5b59c9b7efa6b4a0dcc6d6a6ff24c5fa1f97f71bbc2da1a866d96d6')
+        ('myextradata', '1'),
+        ('requestFingerprint', '8929503fa089aced88c8b9688ead3365b85d1a8e964aa31fa0f83f5ae2c79d2deb5b7f4e66d6dcf47d4aff843ffea38ee6af1d59b3b1764c22293c4634072e9b'),
     ])
 
     expected_result = 'https://secure.wirecard-cee.com/qmore/frontend/D200001qmore/select.php?SID=8u8ev2jrc8cs0n94cppphv2036'
@@ -74,7 +75,7 @@ def test_qmore_init_frontend():
     with patch.object(requests, 'post', return_value=mock_response) as mock_method:
         result = client.init_frontend('100.00', 'EUR', 'CCARD', 'de', 'test order',
             'http://www.example.com/success', 'http://www.example.com/cancel', 'http://www.example.com/failure',
-                'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1')
+                'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1', myextradata='1')
     mock_method.assert_called_once_with(request_url, request_data)
     assert result == expected_result
 
