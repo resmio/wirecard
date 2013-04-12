@@ -16,7 +16,7 @@ setup(
     url='https://bitbucket.org/resmio/wirecard/',
     long_description=open('README', 'r').read(),
     packages=['wirecard'],
-    requires=['requests>=0.13.5',],
+    requires=['requests(>=0.13.5)'],
     install_requires=[
     ],
     classifiers=[
