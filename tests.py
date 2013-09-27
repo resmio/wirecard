@@ -4,6 +4,89 @@ from mock import patch
 import requests
 from wirecard.qmore import QMore, QMoreError
 
+def test_qmore_verify_reponse():
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore')
+
+    data = {
+        'paymentState': 'SUCCESS',
+        'language': 'da',
+        'authenticated': 'Yes',
+        'purchase_id': '23',
+        'responseFingerprintOrder': 'amount,currency,paymentType,financialInstitution,language,orderNumber,paymentState,purchase_id,payment_type,authenticated,anonymousPan,expiry,cardholder,maskedPan,gatewayReferenceNumber,gatewayContractNumber,avsResponseCode,avsResponseMessage,secret,responseFingerprintOrder',
+        'cardholder': 'Niels',
+        'payment_type': 'ticketpurchase',
+        'amount': '40.00',
+        'anonymousPan': '0003',
+        'expiry': '03/2014',
+        'paymentType': 'CCARD',
+        'avsResponseMessage': 'Demo AVS ResultMessage',
+        'maskedPan': '940000******0003',
+        'orderNumber': '14150147',
+        'gatewayReferenceNumber': 'DGW_14150147_RN',
+        'currency': 'EUR',
+        'gatewayContractNumber': 'DemoContractNumber123',
+        'financialInstitution': 'Visa',
+        'avsResponseCode': 'X',
+        'responseFingerprint': '8f7e96cf5fac73ae3bae8290f91ff567ebfadefa7430faefa80b40320252d4f9b30a6f4e39dec33db91f73a3dc6db01fcbc7c7dd813b864e06639e0cd5be3807',
+    }
+    assert client.verify_response(data)
+
+def test_qmore_verify_response_missing_field():
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore')
+
+    data = {
+        'paymentState': 'SUCCESS',
+        'authenticated': 'Yes',
+        'purchase_id': '23',
+        'responseFingerprintOrder': 'amount,currency,paymentType,financialInstitution,language,orderNumber,paymentState,purchase_id,payment_type,authenticated,anonymousPan,expiry,cardholder,maskedPan,gatewayReferenceNumber,gatewayContractNumber,avsResponseCode,avsResponseMessage,secret,responseFingerprintOrder',
+        'cardholder': 'Niels',
+        'payment_type': 'ticketpurchase',
+        'amount': '40.00',
+        'anonymousPan': '0003',
+        'expiry': '03/2014',
+        'paymentType': 'CCARD',
+        'avsResponseMessage': 'Demo AVS ResultMessage',
+        'maskedPan': '940000******0003',
+        'orderNumber': '14150147',
+        'gatewayReferenceNumber': 'DGW_14150147_RN',
+        'currency': 'EUR',
+        'gatewayContractNumber': 'DemoContractNumber123',
+        'financialInstitution': 'Visa',
+        'avsResponseCode': 'X',
+        'responseFingerprint': '8f7e96cf5fac73ae3bae8290f91ff567ebfadefa7430faefa80b40320252d4f9b30a6f4e39dec33db91f73a3dc6db01fcbc7c7dd813b864e06639e0cd5be3807',
+    }
+    assert not client.verify_response(data)
+
+def test_qmore_verify_response_invalid_data():
+    """
+    Test verify response invalid data
+
+    """
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore')
+
+    data = {
+        'paymentState': 'SUCCESS',
+        'language': 'da',
+        'authenticated': 'Yes',
+        'purchase_id': '23',
+        'cardholder': 'Niels',
+        'payment_type': 'ticketpurchase',
+        'amount': '40.00',
+        'anonymousPan': '0003',
+        'expiry': '03/2014',
+        'paymentType': 'CCARD',
+        'avsResponseMessage': 'Demo AVS ResultMessage',
+        'maskedPan': '940000******0003',
+        'orderNumber': '14150147',
+        'gatewayReferenceNumber': 'DGW_14150147_RN',
+        'currency': 'EUR',
+        'gatewayContractNumber': 'DemoContractNumber123',
+        'financialInstitution': 'Visa',
+        'avsResponseCode': 'X',
+    }
+    assert not client.verify_response(data)
+
+
 def test_qmore_init_datastorage():
     client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore')
     order_ident = '12345'
