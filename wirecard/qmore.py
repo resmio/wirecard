@@ -143,7 +143,7 @@ class QMore:
         return result
 
     def make_request_fingerprint(self, data):
-    	return hashlib.sha512(''.join(data)).hexdigest()
+    	return hashlib.sha512(''.join(data).encode('utf-8')).hexdigest()
 
     def verify_response(self, data):
         data['secret'] = self.secret
