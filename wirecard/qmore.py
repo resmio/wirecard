@@ -3,8 +3,10 @@ import hashlib
 from urllib import unquote
 import requests
 
+
 class QMoreError(Exception):
     pass
+
 
 class QMore:
     """
@@ -12,31 +14,35 @@ class QMore:
     http://www.wirecard.at/en/products/qmore/
 
     """
-    def __init__(self, customerId, secret, password=None, shopId=None, language='en'):
+    def __init__(self, customerId, secret, password=None, shopId=None,
+                 language='en'):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
         self.language = language
         self.password = password
 
-    def init_datastorage(self, orderIdent, returnUrl='http://www.example.com/return'):
+    def init_datastorage(self, orderIdent,
+                         returnUrl='http://www.example.com/return'):
         """
         Init data datastorage
 
         """
-    	url = 'https://secure.wirecard-cee.com/qmore/dataStorage/init'
-    	data = OrderedDict((
-    	    ('customerId', self.customerId),
+        url = 'https://secure.wirecard-cee.com/qmore/dataStorage/init'
+        data = OrderedDict((
+            ('customerId', self.customerId),
             ('shopId', self.shopId),
-    	    ('orderIdent', orderIdent),
-    	    ('returnUrl', returnUrl),
-    	    ('language', self.language),
-    	))
+            ('orderIdent', orderIdent),
+            ('returnUrl', returnUrl),
+            ('language', self.language),
+        ))
 
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
-        data.update([('requestFingerprint', self.make_request_fingerprint(data.values() + [self.secret]))])
+        fingerprint = self.make_request_fingerprint(
+            data.values() + [self.secret])
+        data.update([('requestFingerprint', fingerprint)])
         response = requests.post(url, data)
 
         result = dict([s.split('=') for s in response.text.split('&')])
@@ -44,7 +50,9 @@ class QMore:
         error_count = int(result.get('errors', '0'))
         if error_count:
             errors = [(
-                result['error.%d.errorCode' % i], result['error.%d.message' % i], result['error.%d.consumerMessage' % i]
+                result['error.%d.errorCode' % i],
+                result['error.%d.message' % i],
+                result['error.%d.consumerMessage' % i]
                 ) for i in range(error_count, error_count + 1)]
             raise QMoreError(errors)
 
@@ -52,9 +60,12 @@ class QMore:
         return result
 
     def init_frontend(self, amount, currency, paymentType, language,
-        orderDescription, successUrl, cancelUrl, failureUrl, serviceUrl, confirmUrl,
-            consumerUserAgent, consumerIpAddress, autoDeposit=None, financialInstitution=None, noscriptInfoUrl=None,
-                windowName=None, duplicateRequestCheck=None, storageId=None, orderIdent=None, **kwargs):
+                      orderDescription, successUrl, cancelUrl, failureUrl,
+                      serviceUrl, confirmUrl, consumerUserAgent,
+                      consumerIpAddress, autoDeposit=None,
+                      financialInstitution=None, noscriptInfoUrl=None,
+                      windowName=None, duplicateRequestCheck=None,
+                      storageId=None, orderIdent=None, **kwargs):
         """
         Init frontend
 
@@ -90,23 +101,28 @@ class QMore:
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
         data['requestFingerprintOrder'] = ','.join(data.keys() + ['secret'])
-        data.update([('requestFingerprint', self.make_request_fingerprint(data.values() + [self.secret]))])
+        fingerprint = self.make_request_fingerprint(
+            data.values() + [self.secret])
+        data.update([('requestFingerprint', fingerprint)])
         response = requests.post(url, data)
         result = dict([s.split('=') for s in response.text.split('&')])
 
         error_count = int(result.get('errors', '0'))
         if error_count:
             errors = [(
-                result['error.%d.errorCode' % i], result['error.%d.message' % i], result['error.%d.consumerMessage' % i]
-                ) for i in range(error_count, error_count + 1)]
+                result['error.%d.errorCode' % i],
+                result['error.%d.message' % i],
+                result['error.%d.consumerMessage' % i]
+            ) for i in range(error_count, error_count + 1)]
             raise QMoreError(errors)
 
         result['redirectUrl'] = unquote(result['redirectUrl'])
         return result['redirectUrl']
 
     def recurring_payment(self, sourceOrderNumber, amount, orderDescription,
-            language='en', orderNumber=None, customerStatement=None,
-            autoDeposit=None, orderReference=None, currency='EUR'):
+                          language='en', orderNumber=None,
+                          customerStatement=None, autoDeposit=None,
+                          orderReference=None, currency='EUR'):
         """
         Recurring payment
 
@@ -132,7 +148,8 @@ class QMore:
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
-        data['requestFingerprint'] = self.make_request_fingerprint(data.values())
+        fingerprint = self.make_request_fingerprint(data.values())
+        data['requestFingerprint'] = fingerprint
         del data['secret']
         response = requests.post(url, data)
         result = dict([s.split('=') for s in response.text.split('&')])
@@ -140,19 +157,22 @@ class QMore:
         error_count = int(result.get('errors', '0'))
         if error_count:
             errors = [(
-                result['error.%d.errorCode' % i], result['error.%d.message' % i], result['error.%d.consumerMessage' % i]
-                ) for i in range(error_count, error_count + 1)]
+                result['error.%d.errorCode' % i],
+                result['error.%d.message' % i],
+                result['error.%d.consumerMessage' % i]
+            ) for i in range(error_count, error_count + 1)]
             raise QMoreError(errors)
 
         return result
 
     def make_request_fingerprint(self, data):
-    	return hashlib.sha512(''.join(data).encode('utf-8')).hexdigest()
+        return hashlib.sha512(''.join(data).encode('utf-8')).hexdigest()
 
     def verify_response(self, data):
         data['secret'] = self.secret
         try:
-            fingerprint = self.make_request_fingerprint((data[i] for i in data['responseFingerprintOrder'].split(',')))
+            fingerprint = self.make_request_fingerprint(
+                (data[i] for i in data['responseFingerprintOrder'].split(',')))
             return data['responseFingerprint'] == fingerprint
         except KeyError:
             return False
