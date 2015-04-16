@@ -104,7 +104,9 @@ class QMore:
         result['redirectUrl'] = unquote(result['redirectUrl'])
         return result['redirectUrl']
 
-    def recurring_payment(self, sourceOrderNumber, amount, orderDescription, language='en', orderNumber=None, autoDeposit=None, currency='EUR'):
+    def recurring_payment(self, sourceOrderNumber, amount, orderDescription,
+            language='en', orderNumber=None, customerStatement=None,
+            autoDeposit=None, orderReference=None, currency='EUR'):
         """
         Recurring payment
 
@@ -118,8 +120,10 @@ class QMore:
             ('secret', self.secret),
             ('language', language),
             ('orderNumber', orderNumber),
+            ('customerStatement', customerStatement),
             ('sourceOrderNumber', sourceOrderNumber),
             ('autoDeposit', autoDeposit),
+            ('orderReference', orderReference),
             ('orderDescription', orderDescription),
             ('amount', amount),
             ('currency', currency),
