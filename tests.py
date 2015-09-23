@@ -110,7 +110,7 @@ def test_qmore_init_datastorage():
         'storageId': 'ce161cce3ff466b616d21b05d56981be'
     }
 
-    with patch.object(requests, 'post', return_value=mock_response) as mock_method:
+    with patch.object(client.session, 'post', return_value=mock_response) as mock_method:
         data_storage_result = client.init_datastorage(order_ident)
     mock_method.assert_called_once_with(request_url, request_data)
     assert data_storage_result == expected_result
@@ -121,7 +121,7 @@ def test_qmore_init_frontend():
     # make sure we raise QMoreError when an error occurs
     mock_init_frontend_result = 'error.1.message=PAYMENTTYPE+is+invalid.&error.1.consumerMessage=PAYMENTTYPE+ist+ung%26%23252%3Bltig.&error.1.errorCode=18051&errors=1'
     mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result))
- 
+
     with patch.object(requests, 'post', return_value=mock_response) as mock_method:
         with assert_raises(QMoreError):
             result = client.init_frontend('100.00', 'EUR', 'INVALIDPAYMENTTYPE', 'de', 'test order',
@@ -155,7 +155,7 @@ def test_qmore_init_frontend():
 
     expected_result = 'https://secure.wirecard-cee.com/qmore/frontend/D200001qmore/select.php?SID=8u8ev2jrc8cs0n94cppphv2036'
 
-    with patch.object(requests, 'post', return_value=mock_response) as mock_method:
+    with patch.object(client.session, 'post', return_value=mock_response) as mock_method:
         result = client.init_frontend('100.00', 'EUR', 'CCARD', 'de', 'test order',
             'http://www.example.com/success', 'http://www.example.com/cancel', 'http://www.example.com/failure',
                 'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1', myextradata='1')
@@ -188,8 +188,7 @@ def test_qmore_recur_payment():
         ('requestFingerprint', 'd89ee82de84ec0fc02364b3f52cbd8cb5aa4854a2a899721e8caf6212685d9689b737a1a110cac6cc6c9d09081c57b736bad18994764b966e53703dd1a3753bc'),
     ])
 
-    with patch.object(requests, 'post', return_value=mock_response) as mock_method:
+    with patch.object(client.session, 'post', return_value=mock_response) as mock_method:
         result = client.recurring_payment('123456', '100.00', 'my orderdescription', 'de', '1234', autoDeposit='NO')
     mock_method.assert_called_once_with(request_url, request_data)
     assert result == {'orderNumber': '1234'}
-

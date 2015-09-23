@@ -2,6 +2,8 @@ from collections import OrderedDict
 import hashlib
 from urllib import unquote
 import requests
+from wirecard.adapters import SSLAdapter
+import ssl
 
 
 class QMoreError(Exception):
@@ -21,6 +23,11 @@ class QMore:
         self.secret = secret
         self.language = language
         self.password = password
+
+        # make sure we use TLS protocol for HTTPS
+        self.session = requests.Session()
+        self.session.mount('https://', SSLAdapter(ssl_version=ssl.PROTOCOL_TLSv1))
+
 
     def init_datastorage(self, orderIdent,
                          returnUrl='http://www.example.com/return'):
@@ -43,7 +50,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
-        response = requests.post(url, data)
+        response = self.session.post(url, data)
 
         result = dict([s.split('=') for s in response.text.split('&')])
 
@@ -104,7 +111,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
-        response = requests.post(url, data)
+        response = self.session.post(url, data)
         result = dict([s.split('=') for s in response.text.split('&')])
 
         error_count = int(result.get('errors', '0'))
@@ -151,7 +158,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(data.values())
         data['requestFingerprint'] = fingerprint
         del data['secret']
-        response = requests.post(url, data)
+        response = self.session.post(url, data)
         result = dict([s.split('=') for s in response.text.split('&')])
 
         error_count = int(result.get('errors', '0'))
