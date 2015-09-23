@@ -112,7 +112,7 @@ def test_qmore_init_datastorage():
 
     with patch.object(client.session, 'post', return_value=mock_response) as mock_method:
         data_storage_result = client.init_datastorage(order_ident)
-    mock_method.assert_called_once_with(request_url, request_data)
+    mock_method.assert_called_once_with(request_url, request_data, verify=True)
     assert data_storage_result == expected_result
 
 def test_qmore_init_frontend():
@@ -159,7 +159,7 @@ def test_qmore_init_frontend():
         result = client.init_frontend('100.00', 'EUR', 'CCARD', 'de', 'test order',
             'http://www.example.com/success', 'http://www.example.com/cancel', 'http://www.example.com/failure',
                 'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1', myextradata='1')
-    mock_method.assert_called_once_with(request_url, request_data)
+    mock_method.assert_called_once_with(request_url, request_data, verify=True)
     assert result == expected_result
 
 def test_qmore_recur_payment():
@@ -190,5 +190,5 @@ def test_qmore_recur_payment():
 
     with patch.object(client.session, 'post', return_value=mock_response) as mock_method:
         result = client.recurring_payment('123456', '100.00', 'my orderdescription', 'de', '1234', autoDeposit='NO')
-    mock_method.assert_called_once_with(request_url, request_data)
+    mock_method.assert_called_once_with(request_url, request_data, verify=True)
     assert result == {'orderNumber': '1234'}

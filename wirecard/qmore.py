@@ -17,12 +17,13 @@ class QMore:
 
     """
     def __init__(self, customerId, secret, password=None, shopId=None,
-                 language='en'):
+                 language='en', verify=True):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
         self.language = language
         self.password = password
+        self.verify = verify
 
         # make sure we use TLS protocol for HTTPS
         self.session = requests.Session()
@@ -50,7 +51,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
-        response = self.session.post(url, data)
+        response = self.session.post(url, data, verify=self.verify)
 
         result = dict([s.split('=') for s in response.text.split('&')])
 
@@ -111,7 +112,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
-        response = self.session.post(url, data)
+        response = self.session.post(url, data, verify=self.verify)
         result = dict([s.split('=') for s in response.text.split('&')])
 
         error_count = int(result.get('errors', '0'))
@@ -158,7 +159,7 @@ class QMore:
         fingerprint = self.make_request_fingerprint(data.values())
         data['requestFingerprint'] = fingerprint
         del data['secret']
-        response = self.session.post(url, data)
+        response = self.session.post(url, data, verify=self.verify)
         result = dict([s.split('=') for s in response.text.split('&')])
 
         error_count = int(result.get('errors', '0'))
