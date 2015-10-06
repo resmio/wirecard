@@ -144,13 +144,13 @@ class QMore:
             ('secret', self.secret),
             ('language', language),
             ('orderNumber', orderNumber),
-            ('customerStatement', customerStatement),
             ('sourceOrderNumber', sourceOrderNumber),
             ('autoDeposit', autoDeposit),
-            ('orderReference', orderReference),
             ('orderDescription', orderDescription),
             ('amount', amount),
             ('currency', currency),
+            ('orderReference', orderReference),
+            ('customerStatement', customerStatement),
         ))
 
         # remove unused optional values (None values)
