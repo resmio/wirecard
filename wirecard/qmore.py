@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import hashlib
 from urllib import unquote
+from urlparse import parse_qsl
 import requests
 from wirecard.adapters import SSLAdapter
 import ssl
@@ -53,7 +54,7 @@ class QMore:
         data.update([('requestFingerprint', fingerprint)])
         response = self.session.post(url, data, verify=self.verify)
 
-        result = dict([s.split('=') for s in response.text.split('&')])
+        result = dict(parse_qsl(response.text))
 
         error_count = int(result.get('errors', '0'))
         if error_count:
@@ -113,7 +114,7 @@ class QMore:
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
         response = self.session.post(url, data, verify=self.verify)
-        result = dict([s.split('=') for s in response.text.split('&')])
+        result = dict(parse_qsl(response.text))
 
         error_count = int(result.get('errors', '0'))
         if error_count:
