@@ -18,13 +18,14 @@ class QMore:
 
     """
     def __init__(self, customerId, secret, password=None, shopId=None,
-                 language='en', verify=True):
+                 language='en', verify=True, jsVersion='pci3'):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
         self.language = language
         self.password = password
         self.verify = verify
+        self.jsVersion = jsVersion
 
         # make sure we use TLS protocol for HTTPS
         self.session = requests.Session()
@@ -44,6 +45,7 @@ class QMore:
             ('orderIdent', orderIdent),
             ('returnUrl', returnUrl),
             ('language', self.language),
+            ('javascriptScriptVersion', self.jsVersion),
         ))
 
         # remove unused optional values (None values)
