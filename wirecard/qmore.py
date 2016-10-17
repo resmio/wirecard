@@ -18,7 +18,8 @@ class QMore:
 
     """
     def __init__(self, customerId, secret, password=None, shopId=None,
-                 language='en', verify=True, jsVersion='pci3'):
+                 language='en', verify=True, jsVersion='pci3',
+                 iframeCssUrl=None):
         self.customerId = customerId
         self.shopId = shopId
         self.secret = secret
@@ -26,6 +27,7 @@ class QMore:
         self.password = password
         self.verify = verify
         self.jsVersion = jsVersion
+        self.iframeCssUrl = iframeCssUrl
 
         # make sure we use TLS protocol for HTTPS
         self.session = requests.Session()
@@ -46,6 +48,7 @@ class QMore:
             ('returnUrl', returnUrl),
             ('language', self.language),
             ('javascriptScriptVersion', self.jsVersion),
+            ('iframeCssUrl', self.iframeCssUrl),
         ))
 
         # remove unused optional values (None values)
