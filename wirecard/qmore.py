@@ -48,7 +48,6 @@ class QMore:
             ('returnUrl', returnUrl),
             ('language', self.language),
             ('javascriptScriptVersion', self.jsVersion),
-            ('iframeCssUrl', self.iframeCssUrl),
         ))
 
         # remove unused optional values (None values)
@@ -56,7 +55,8 @@ class QMore:
 
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
-        data.update([('requestFingerprint', fingerprint)])
+        data.update([('requestFingerprint', fingerprint),
+                     ('iframeCssUrl', self.iframeCssUrl),])
         response = self.session.post(url, data, verify=self.verify)
 
         result = dict(parse_qsl(response.text))
