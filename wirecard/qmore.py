@@ -118,16 +118,25 @@ class QMore:
         fingerprint = self.make_request_fingerprint(
             data.values() + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
+
         response = self.session.post(url, data, verify=self.verify)
         result = dict(parse_qsl(response.text))
 
         error_count = int(result.get('errors', '0'))
         if error_count:
             errors = [(
-                result['error.%d.errorCode' % i],
-                result['error.%d.message' % i],
-                result['error.%d.consumerMessage' % i]
-            ) for i in range(error_count, error_count + 1)]
+                          result['error.%d.errorCode' % i],
+                          result['error.%d.message' % i],
+                          result['error.%d.consumerMessage' % i]
+                      ) for i in range(error_count, error_count + 1)]
+            raise QMoreError(errors)
+
+        if response.status_code in range(400, 600):
+            errors = [(
+                response.status_code,
+                parse_qsl(response.text),
+                'Unfortunately, your payment could not be processed.'
+            )]
             raise QMoreError(errors)
 
         result['redirectUrl'] = unquote(result['redirectUrl'])

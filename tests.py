@@ -118,19 +118,9 @@ def test_qmore_init_datastorage():
 def test_qmore_init_frontend():
     client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore',)
 
-    # make sure we raise QMoreError when an error occurs
-    mock_init_frontend_result = 'error.1.message=PAYMENTTYPE+is+invalid.&error.1.consumerMessage=PAYMENTTYPE+ist+ung%26%23252%3Bltig.&error.1.errorCode=18051&errors=1'
-    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result))
-
-    with patch.object(requests, 'post', return_value=mock_response) as mock_method:
-        with assert_raises(QMoreError):
-            result = client.init_frontend('100.00', 'EUR', 'INVALIDPAYMENTTYPE', 'de', 'test order',
-                'http://www.example.com/success', 'http://www.example.com/cancel', 'http://www.example.com/failure',
-                    'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1')
-
     # should work fine
     mock_init_frontend_result = 'redirectUrl=https%3A%2F%2Fsecure.wirecard-cee.com%2Fqmore%2Ffrontend%2FD200001qmore%2Fselect.php%3FSID%3D8u8ev2jrc8cs0n94cppphv2036'
-    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result))
+    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result, status_code=200))
 
     request_url = 'https://secure.wirecard-cee.com/qmore/frontend/init'
     request_data = OrderedDict([
@@ -146,11 +136,13 @@ def test_qmore_init_frontend():
         ('failureUrl', 'http://www.example.com/failure'),
         ('serviceUrl', 'http://www.example.com/service'),
         ('confirmUrl', 'http://www.example.com/confirm'),
-        ('requestFingerprintOrder', 'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,myextradata,secret'),
+        ('requestFingerprintOrder',
+         'customerId,shopId,amount,currency,paymentType,language,orderDescription,successUrl,cancelUrl,failureUrl,serviceUrl,confirmUrl,requestFingerprintOrder,consumerUserAgent,consumerIpAddress,myextradata,secret'),
         ('consumerUserAgent', 'chrome'),
         ('consumerIpAddress', '127.0.0.1'),
         ('myextradata', '1'),
-        ('requestFingerprint', '8929503fa089aced88c8b9688ead3365b85d1a8e964aa31fa0f83f5ae2c79d2deb5b7f4e66d6dcf47d4aff843ffea38ee6af1d59b3b1764c22293c4634072e9b'),
+        ('requestFingerprint',
+         '8929503fa089aced88c8b9688ead3365b85d1a8e964aa31fa0f83f5ae2c79d2deb5b7f4e66d6dcf47d4aff843ffea38ee6af1d59b3b1764c22293c4634072e9b'),
     ])
 
     expected_result = 'https://secure.wirecard-cee.com/qmore/frontend/D200001qmore/select.php?SID=8u8ev2jrc8cs0n94cppphv2036'
@@ -161,6 +153,33 @@ def test_qmore_init_frontend():
                 'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome', '127.0.0.1', myextradata='1')
     mock_method.assert_called_once_with(request_url, request_data, verify=True)
     assert result == expected_result
+
+def test_qmore_init_frontend_handling_errors():
+    client = QMore('D200001', 'B8AKTPWBRMNBV455FG6M2DANE99WU2', shopId='qmore', )
+
+    # make sure we raise QMoreError when an error occurs
+    mock_init_frontend_result = 'error.1.message=PAYMENTTYPE+is+invalid.&error.1.consumerMessage=PAYMENTTYPE+ist+ung%26%23252%3Bltig.&error.1.errorCode=18051&errors=1'
+    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result))
+
+    with patch.object(client.session, 'post', return_value=mock_response):
+        with assert_raises(QMoreError):
+            client.init_frontend('100.00', 'EUR', 'INVALIDPAYMENTTYPE', 'de', 'test order',
+                                  'http://www.example.com/success', 'http://www.example.com/cancel',
+                                  'http://www.example.com/failure',
+                                  'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome',
+                                  '127.0.0.1')
+
+    # test with different error response
+    mock_init_frontend_result = ''
+    mock_response = type('TestResponse', (object,), dict(text=mock_init_frontend_result, status_code=500))
+
+    with patch.object(client.session, 'post', return_value=mock_response):
+        with assert_raises(QMoreError):
+            client.init_frontend('100.00', 'EUR', 'CCARD', 'de', 'test order',
+                                 'http://www.example.com/success', 'http://www.example.com/cancel',
+                                 'http://www.example.com/failure',
+                                 'http://www.example.com/service', 'http://www.example.com/confirm', 'chrome',
+                                 '127.0.0.1')
 
 def test_qmore_recur_payment():
     """
