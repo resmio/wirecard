@@ -74,9 +74,9 @@ class QMore:
         return result
 
     def init_frontend(self, amount, currency, paymentType, language,
-                      orderDescription, successUrl, cancelUrl, failureUrl,
-                      serviceUrl, confirmUrl, consumerUserAgent,
-                      consumerIpAddress, autoDeposit=None,
+                      orderDescription, customerStatement, successUrl,
+                      cancelUrl, failureUrl, serviceUrl, confirmUrl,
+                      consumerUserAgent, consumerIpAddress, autoDeposit=None,
                       financialInstitution=None, noscriptInfoUrl=None,
                       windowName=None, duplicateRequestCheck=None,
                       storageId=None, orderIdent=None, **kwargs):
@@ -94,6 +94,7 @@ class QMore:
             ('paymentType', paymentType),
             ('language', language),
             ('orderDescription', orderDescription),
+            ('customerStatement', customerStatement),
             ('successUrl', successUrl),
             ('cancelUrl', cancelUrl),
             ('failureUrl', failureUrl),
