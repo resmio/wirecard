@@ -79,7 +79,8 @@ class QMore:
                       consumerIpAddress, autoDeposit=None,
                       financialInstitution=None, noscriptInfoUrl=None,
                       windowName=None, duplicateRequestCheck=None,
-                      storageId=None, orderIdent=None, **kwargs):
+                      storageId=None, orderIdent=None, customerStatement=None,
+                      **kwargs):
         """
         Init frontend
 
@@ -94,6 +95,7 @@ class QMore:
             ('paymentType', paymentType),
             ('language', language),
             ('orderDescription', orderDescription),
+            ('customerStatement', customerStatement),
             ('successUrl', successUrl),
             ('cancelUrl', cancelUrl),
             ('failureUrl', failureUrl),
