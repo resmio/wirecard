@@ -33,7 +33,6 @@ class QMore:
         self.session = requests.Session()
         self.session.mount('https://', SSLAdapter(ssl_version=ssl.PROTOCOL_TLSv1_2))
 
-
     def init_datastorage(self, orderIdent,
                          returnUrl='http://www.example.com/return'):
         """
