@@ -31,7 +31,7 @@ class QMore:
 
         # make sure we use TLS protocol for HTTPS
         self.session = requests.Session()
-        self.session.mount('https://', SSLAdapter(ssl_version=ssl.PROTOCOL_TLSv1))
+        self.session.mount('https://', SSLAdapter(ssl_version=ssl.PROTOCOL_TLSv1_2))
 
 
     def init_datastorage(self, orderIdent,
