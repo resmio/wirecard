@@ -52,8 +52,15 @@ class QMore:
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
-        fingerprint = self.make_request_fingerprint(
-            data.values() + [self.secret])
+        fingerprint_source = []
+
+        for val in data.values():
+            fingerprint_source.append(val)
+
+        fingerprint_source.append(self.secret)
+
+        fingerprint = self.make_request_fingerprint(fingerprint_source)
+
         data.update([('requestFingerprint', fingerprint),
                      ('iframeCssUrl', self.iframeCssUrl),])
         response = self.session.post(url, data, verify=self.verify)
