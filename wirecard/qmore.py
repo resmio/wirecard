@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import hashlib
-from urllib import unquote
-from urlparse import parse_qsl
+from urllib.parse import unquote
+from urllib.parse import parse_qsl
 import requests
 from wirecard.adapters import SSLAdapter
 import ssl
