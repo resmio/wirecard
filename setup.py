@@ -9,10 +9,10 @@ except ImportError:
 
 setup(
     name='wirecard',
-    version='0.0.1',
+    version='2.0.1',
     description='An interface to wirecard payment gateway.',
-    author='Niels Sandholt Busch',
-    author_email='niels.busch@gmail.com',
+    author='Resmio GmbH',
+    author_email='info@resmio.com',
     url='https://github.com/resmio/wirecard/',
     long_description=open('README.md', 'r').read(),
     packages=['wirecard'],
