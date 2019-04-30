@@ -11,7 +11,7 @@ class QMoreError(Exception):
     pass
 
 
-class QMore:
+class QMore(object):
     """
     Client library for Wirecard's QMORE payment gateway interface
     http://www.wirecard.at/en/products/qmore/
@@ -54,7 +54,7 @@ class QMore:
 
         fingerprint_source = []
 
-        for val in data.values():
+        for val in list(data.values()):
             fingerprint_source.append(val)
 
         fingerprint_source.append(self.secret)
@@ -122,9 +122,9 @@ class QMore:
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
-        data['requestFingerprintOrder'] = ','.join(data.keys() + ['secret'])
+        data['requestFingerprintOrder'] = ','.join(list(data.keys()) + ['secret'])
         fingerprint = self.make_request_fingerprint(
-            data.values() + [self.secret])
+            list(data.values()) + [self.secret])
         data.update([('requestFingerprint', fingerprint)])
 
         response = self.session.post(url, data, verify=self.verify)
@@ -179,7 +179,7 @@ class QMore:
         # remove unused optional values (None values)
         data = OrderedDict([(a, data[a]) for a in data if data[a] is not None])
 
-        fingerprint = self.make_request_fingerprint(data.values())
+        fingerprint = self.make_request_fingerprint(list(data.values()))
         data['requestFingerprint'] = fingerprint
         del data['secret']
         response = self.session.post(url, data, verify=self.verify)
