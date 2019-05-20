@@ -9,7 +9,7 @@ except ImportError:
 
 setup(
     name='wirecard',
-    version='2.0.1',
+    version='3.0.0',
     description='An interface to wirecard payment gateway.',
     author='Resmio GmbH',
     author_email='info@resmio.com',
